@@ -101,9 +101,9 @@ def forwardRequest(link,logInfo=''):
     return response
 
 def rateMonitor(remaining):
-    if int(remaining) <= 50:
+    if int(remaining) <= 2:
         log('X-RateLimit-Overall-Remaining reaches maximum, too tired, I need to take a minute break :)')
-        time.sleep(62)
+        time.sleep(61)
 
 
 def log(info):
