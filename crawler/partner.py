@@ -16,7 +16,7 @@ opts, args = getopt.getopt(sys.argv[1:],"o:")
 
 for opt, arg in opts:
     if opt == '-o':
-        output_dir = arg
+        output_dir = os.path.abspath(arg)
     
 
 partner_csv = os.path.join(output_dir,'partner.csv')

@@ -27,7 +27,7 @@ def help():
 
 for opt, arg in opts:
     if opt == '-o':
-        output_dir = arg
+        output_dir = os.path.abspath(arg)
 
 
 

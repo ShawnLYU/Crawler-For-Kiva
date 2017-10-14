@@ -26,7 +26,7 @@ def help():
 
 for opt, arg in opts:
     if opt == '-o':
-        output_dir = arg
+        output_dir = os.path.abspath(arg)
     elif opt == '-i':
         lender_id_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),arg,'loan_lender.csv')
 
