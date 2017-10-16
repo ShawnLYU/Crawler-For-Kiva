@@ -10,7 +10,7 @@ class Loan:
     def write(self, file_path, feature):
         with open(file_path, 'a+') as outfile:
             writer = csv.writer(outfile)
-            writer.writerow([unicode(self.loan_info[f]).encode("utf-8") for f in feature])
+            writer.writerow([unicode(self.loan_info[f]).encode("utf-8").replace("\n", "\\n") for f in feature])
  
 
 class Lender:
@@ -20,7 +20,7 @@ class Lender:
     def write(self, file_path, feature):
         with open(file_path, 'a+') as outfile:
             writer = csv.writer(outfile)
-            writer.writerow([unicode(self.lender_info[f]).encode("utf-8") for f in feature])
+            writer.writerow([unicode(self.lender_info[f]).encode("utf-8").replace("\n", "\\n") for f in feature])
  
 
 
@@ -31,7 +31,7 @@ class Partner:
     def write(self, file_path, feature):
         with open(file_path, 'a+') as outfile:
             writer = csv.writer(outfile)
-            writer.writerow([unicode(self.partner_info[f]).encode("utf-8") for f in feature])
+            writer.writerow([unicode(self.partner_info[f]).encode("utf-8").replace("\n", "\\n") for f in feature])
  
 
 
@@ -43,16 +43,16 @@ class Team:
     def write(self, file_path, feature):
         with open(file_path, 'a+') as outfile:
             writer = csv.writer(outfile)
-            writer.writerow([unicode(self.team_info[f]).encode("utf-8") for f in feature])
+            writer.writerow([unicode(self.team_info[f]).encode("utf-8").replace("\n", "\\n") for f in feature])
  
 
 
 class Teammember:
     def __init__(self, teammember_info):
-        self.team_info = teammember_info
+        self.teammember_info = teammember_info
 
     def write(self, file_path, feature):
         with open(file_path, 'a+') as outfile:
             writer = csv.writer(outfile)
-            writer.writerow([unicode(self.teammember_info[f]).encode("utf-8") for f in feature])
+            writer.writerow([unicode(self.teammember_info[f]).encode("utf-8").replace("\n", "\\n") for f in feature])
  

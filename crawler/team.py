@@ -8,13 +8,13 @@ import ast
 from common import team_features
 from common import team_each
 from common import forwardRequest
-opts, args = getopt.getopt(sys.argv[1:],"i:o:")
+opts, args = getopt.getopt(sys.argv[1:],"i:o:h")
 
 def help():
-    print
-    '''
+    print '''
     -i  dir for team ids
     -o  output output_dir
+    python team.py -i -o >> 2>&1 &
     '''
 
 
@@ -26,13 +26,16 @@ for opt, arg in opts:
         output_dir = os.path.abspath(arg)
     elif opt == '-i':
         team_id_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),arg,'loan_team.csv')
+    elif opt == '-h':
+        help()
+
 
 with open(team_id_dir, 'rb') as csv_file:
     reader = csv.reader(csv_file)
     mydict = dict(reader)
 
 total_teams_tmp=[ast.literal_eval(mydict[e]) for e in mydict]
-total_teams = set([item for sublist in total_teams_tmp for item in sublist])
+total_teams = list(set([item for sublist in total_teams_tmp for item in sublist]))
 
 
 team_csv = os.path.join(output_dir,'team.csv')

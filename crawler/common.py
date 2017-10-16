@@ -91,6 +91,7 @@ teammember_features = [
     "country_code",
     "uid",
     "team_join_date",
+    "team_id",
 ]
 
 def forwardRequest(link,logInfo=''):

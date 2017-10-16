@@ -13,22 +13,21 @@ from common import loan_lender_page
 from common import loan_team_page
 
 
-opts, args = getopt.getopt(sys.argv[1:],"o:")
+opts, args = getopt.getopt(sys.argv[1:],"o:h")
 
 def help():
-    print
-    '''
+    print '''
     -o  output output_dir
+    python loan.py -o >> 2>&1 &
     '''
-
-
     sys.exit()
 
 
 for opt, arg in opts:
     if opt == '-o':
         output_dir = os.path.abspath(arg)
-
+    elif opt == '-h':
+        help()
 
 
 loan_csv = os.path.join(output_dir,'loan.csv')
@@ -87,9 +86,9 @@ crawling loans' lenders and teams
 for i in range(len(loan_ids)):
     loan_lenders[loan_ids[i]]=[]
 
-    total_page = json.loads(forwardRequest(loan_lender_page(loan_ids[i],1),'crawling the lender for loan id '+str(loan_ids[i])).read())['paging']['pages']
-    for j in range(total_page):
-        response = forwardRequest(loan_lender_page(loan_ids[i],j+1),'crawling the loan lenders: page '+str(j)+', '+' out of '+str(total_pages)+' pages for loan '+str(loan_ids[i]))
+    total_pages = json.loads(forwardRequest(loan_lender_page(loan_ids[i],1),'crawling the '+str(i+1)+' loan lenders for loan id '+str(loan_ids[i])).read())['paging']['pages']
+    for j in range(total_pages):
+        response = forwardRequest(loan_lender_page(loan_ids[i],j+1),'crawling the '+str(i+1)+' loan lenders: page '+str(j+1)+', '+' out of '+str(total_pages)+' pages for loan '+str(loan_ids[i])+' out of '+str(len(loan_ids))+' loans')
         this_page = json.loads(response.read())
         page_size = len(this_page['lenders'])
         for k in range(page_size):
@@ -107,9 +106,9 @@ with open(loan_lender_csv, 'wb') as csv_file:
 
 for i in range(len(loan_ids)):
     loan_teams[loan_ids[i]]=[]
-    total_page = json.loads(forwardRequest(loan_team_page(loan_ids[i],1)).read(),'crawling the team for loan id '+str(loan_ids[i]))['paging']['pages']
-    for j in range(total_page):
-        response = forwardRequest(loan_team_page(loan_ids[i],j+1),'crawling the loan teams: page '+str(j)+', '+' out of '+str(total_pages)+' pages for loan '+str(loan_ids[i]))
+    total_pages = json.loads(forwardRequest(loan_team_page(loan_ids[i],1),'crawling the '+str(i+1)+' loan teams for loan id '+str(loan_ids[i])).read())['paging']['pages']
+    for j in range(total_pages):
+        response = forwardRequest(loan_team_page(loan_ids[i],j+1),'crawling the '+str(i+1)+' loan teams: page '+str(j+1)+', '+' out of '+str(total_pages)+' pages for loan '+str(loan_ids[i])+' out of '+str(len(loan_ids))+' loans')
         this_page = json.loads(response.read())
         page_size = len(this_page['teams'])
         for k in range(page_size):
@@ -127,9 +126,8 @@ crawling loans
 
 
 for i in range(len(loan_ids)):
-    time.sleep(1.1)
     _loan_id = loan_ids[i]
-    response = forwardRequest(loans_each(_loan_id),'crawling the loan: '+str(_loan_id)+', '+' out of '+str(len(loan_ids)))
+    response = forwardRequest(loan_each(_loan_id),'crawling the '+str(i+1)+' loan: '+str(_loan_id)+', '+' out of '+str(len(loan_ids)))
     _loan_json = json.loads(response.read())['loans'][0]
     for k in loan_features:
         if k not in _loan_json.keys():

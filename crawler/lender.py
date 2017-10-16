@@ -10,17 +10,15 @@ from common import lender_each
 from common import forwardRequest
 
 
-opts, args = getopt.getopt(sys.argv[1:],"i:o:")
+opts, args = getopt.getopt(sys.argv[1:],"i:o:h")
 
 
 def help():
-    print
-    '''
+    print '''
     -i  dir for lender ids
     -o  output output_dir
+    python lender.py -i -o >> 2>&1 &
     '''
-
-
     sys.exit()
 
 
@@ -29,13 +27,16 @@ for opt, arg in opts:
         output_dir = os.path.abspath(arg)
     elif opt == '-i':
         lender_id_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),arg,'loan_lender.csv')
+    elif opt == '-h':
+        help()
+
 
 with open(lender_id_dir, 'rb') as csv_file:
     reader = csv.reader(csv_file)
     mydict = dict(reader)
 
 total_lenders_tmp=[ast.literal_eval(mydict[e]) for e in mydict]
-total_lenders = set([item for sublist in total_lenders for item in sublist])
+total_lenders = list(set([item for sublist in total_lenders_tmp for item in sublist]))
 
 lender_csv = os.path.join(output_dir,'lender.csv')
 

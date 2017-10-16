@@ -1,6 +1,6 @@
 import urllib2
 import json
-from models import Lender
+from models import Partner
 import ast
 import sys, getopt, os
 import csv 
@@ -9,14 +9,22 @@ from common import partner_features
 from common import partner_page
 from common import forwardRequest
 
-opts, args = getopt.getopt(sys.argv[1:],"o:")
+opts, args = getopt.getopt(sys.argv[1:],"o:h")
 
-
+def help():
+    print '''
+    -o out_dir
+    python partner.py -o >> 2>&1 &
+    '''
+    sys.exit()
 
 
 for opt, arg in opts:
     if opt == '-o':
         output_dir = os.path.abspath(arg)
+    elif opt == '-h':
+        help()
+
     
 
 partner_csv = os.path.join(output_dir,'partner.csv')
