@@ -66,7 +66,7 @@ with open(team_csv, 'w') as outfile:
 
 for i in range(len(total_teams)):
     _team_id = total_teams[i]
-    response = forwardRequest(team_each(_team_id),'crawling the team: '+str(_team_id)+', '+' out of '+str(len(total_teams))+' teams ')
+    response = forwardRequest(team_each(_team_id),'crawling the '+str(i+1)+' team: '+str(_team_id)+', '+' out of '+str(len(total_teams))+' teams ')
     _team_json = json.loads(response.read())['teams'][0]
     for k in team_features:
         if k not in _team_json.keys():

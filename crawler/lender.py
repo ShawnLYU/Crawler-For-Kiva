@@ -62,7 +62,11 @@ crawling lenders
 for i in range(len(total_lenders)):
     _lender_id = total_lenders[i]
     if _lender_id != 'anonymous':
-        response = forwardRequest(lender_each(_lender_id),'crawling the lender: '+str(_lender_id)+', '+' out of '+str(len(total_lenders))+' lenders ')
+        try:
+            response = forwardRequest(lender_each(_lender_id),'crawling the '+str(i+1)+' lender: '+str(_lender_id)+', '+' out of '+str(len(total_lenders))+' lenders ')
+        except Exception as e:
+            print lender_each(_lender_id),'crawling the '+str(i+1)+' lender: '+str(_lender_id)+', '+' out of '+str(len(total_lenders))+' lenders '
+            print str(e)
         _lender_json = json.loads(response.read())['lenders'][0]
         for k in lender_features:
             if k not in _lender_json.keys():
