@@ -1,5 +1,9 @@
 import csv
+'''
 
+define write() for each model
+
+'''
 
 class Loan:
     def __init__(self, loan_info):

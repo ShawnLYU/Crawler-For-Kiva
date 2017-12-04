@@ -5,38 +5,23 @@ import ast
 import sys, getopt, os
 import csv 
 import ast
+import argparse
 from common import team_features
 from common import team_each
 from common import forwardRequest
-opts, args = getopt.getopt(sys.argv[1:],"i:o:h")
+from common import readDicValuesFromCsv
 
-def help():
-    print '''
-    -i  dir for team ids
-    -o  output output_dir
-    python team.py -i -o >> 2>&1 &
-    '''
-
-
-    sys.exit()
+parser = argparse.ArgumentParser()
+parser.add_argument("-o", dest="output_dir",
+                    help="directory for output files")
+parser.add_argument("-i", dest="input_dir",
+                    help="loan team relation file directory")
+args = parser.parse_args()
 
 
-for opt, arg in opts:
-    if opt == '-o':
-        output_dir = os.path.abspath(arg)
-    elif opt == '-i':
-        team_id_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),arg,'loan_team.csv')
-    elif opt == '-h':
-        help()
 
-
-with open(team_id_dir, 'rb') as csv_file:
-    reader = csv.reader(csv_file)
-    mydict = dict(reader)
-
-total_teams_tmp=[ast.literal_eval(mydict[e]) for e in mydict]
-total_teams = list(set([item for sublist in total_teams_tmp for item in sublist]))
-
+output_dir = os.path.abspath(args.output_dir)
+total_teams = readDicValuesFromCsv(os.path.join(os.path.dirname(os.path.abspath(__file__)),args.input_dir,'loan_team.csv'))
 
 team_csv = os.path.join(output_dir,'team.csv')
 
@@ -66,7 +51,11 @@ with open(team_csv, 'w') as outfile:
 
 for i in range(len(total_teams)):
     _team_id = total_teams[i]
-    response = forwardRequest(team_each(_team_id),'crawling the '+str(i+1)+' team: '+str(_team_id)+', '+' out of '+str(len(total_teams))+' teams ')
+    try:
+        response = forwardRequest(team_each(_team_id),'crawling the '+str(i+1)+' team: '+str(_team_id)+', '+' out of '+str(len(total_teams))+' teams ')
+    except Exception as e:
+        print str(e)
+        continue
     _team_json = json.loads(response.read())['teams'][0]
     for k in team_features:
         if k not in _team_json.keys():

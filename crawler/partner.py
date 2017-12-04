@@ -5,29 +5,19 @@ import ast
 import sys, getopt, os
 import csv 
 import ast
+import argparse
 from common import partner_features
 from common import partner_page
 from common import forwardRequest
+parser = argparse.ArgumentParser()
+parser.add_argument("-o", dest="output_dir",
+                    help="directory for output files")
 
-opts, args = getopt.getopt(sys.argv[1:],"o:h")
-
-def help():
-    print '''
-    -o out_dir
-    python partner.py -o >> 2>&1 &
-    '''
-    sys.exit()
-
-
-for opt, arg in opts:
-    if opt == '-o':
-        output_dir = os.path.abspath(arg)
-    elif opt == '-h':
-        help()
+args = parser.parse_args()
 
     
 
-partner_csv = os.path.join(output_dir,'partner.csv')
+partner_csv = os.path.join(os.path.abspath(args.output_dir),'partner.csv')
 
 with open(partner_csv, 'w') as outfile:
     writer = csv.writer(outfile)

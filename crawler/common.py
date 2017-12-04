@@ -1,6 +1,7 @@
 from datetime import datetime
-import time
+import time, os
 import urllib2
+import ast, csv
 
 loan_features = [
     'id',
@@ -93,12 +94,21 @@ teammember_features = [
     "team_join_date",
     "team_id",
 ]
+'''
 
+forward request with speed limitations
+
+'''
 def forwardRequest(link,logInfo=''):
-    response = urllib2.urlopen(link)
+    hdr = {'User-Agent': 'Mozilla/5.0'}
+    req = urllib2.Request(link,headers=hdr)
+    response = urllib2.urlopen(req)
     remaining = response.info().getheader('X-RateLimit-Overall-Remaining')
     log(logInfo+' | ratelimit specific remaining: '+str(remaining))
-    rateMonitor(remaining)
+    try:
+        rateMonitor(remaining)
+    except Exception as e:
+        log('No monitoring excuted')
     return response
 
 def rateMonitor(remaining):
@@ -110,6 +120,11 @@ def rateMonitor(remaining):
 def log(info):
     print datetime.now().strftime('%m-%d %H:%M:%S'),info
 
+'''
+
+accessing API functions
+
+'''
 def loan_page(no):
     return "https://api.kivaws.org/v1/loans/newest.json?page=%d" % (no)
 
@@ -139,3 +154,34 @@ def team_each(teamid):
 def teammember_page(teamid,page):
     teamid = str(teamid)
     return "https://api.kivaws.org/v1/teams/%s/lenders.json?page=%d" % (teamid,page)
+
+
+
+
+'''
+supplementary functions 
+
+'''
+def readDicValuesFromCsv(filePath):
+    with open(filePath, 'rb') as csv_file:
+        reader = csv.reader(csv_file)
+        mydict = dict(reader)
+    ids=[]
+    for v in mydict.values():
+        ids+=ast.literal_eval(v)
+    return list(set(ids))
+
+
+def readLoanIdsToDict(filePath):
+    with open(filePath, 'rb') as csv_file:
+        reader = csv.reader(csv_file)
+        mydict = dict(reader)
+    return mydict
+
+
+
+
+
+
+
+

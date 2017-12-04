@@ -5,36 +5,25 @@ import ast
 import sys, getopt, os
 import csv 
 import ast
+import argparse
 
 from common import teammember_page
 from common import teammember_features
 from common import forwardRequest
-opts, args = getopt.getopt(sys.argv[1:],"i:o:h")
-
-def help():
-    print '''
-    -i  dir for loan ids
-    -o  output output_dir
-    python teammember.py -i -o >> 2>&1 &
-    '''
-    sys.exit()
+from common import readDicValuesFromCsv
 
 
-for opt, arg in opts:
-    if opt == '-o':
-        output_dir = os.path.abspath(arg)
-    elif opt == '-i':
-        team_id_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),arg,'loan_team.csv')
-    elif opt == '-h':
-        help()
+parser = argparse.ArgumentParser()
+parser.add_argument("-o", dest="output_dir",
+                    help="directory for output files")
+parser.add_argument("-i", dest="input_dir",
+                    help="loan team relation file directory")
+args = parser.parse_args()
 
 
-with open(team_id_dir, 'rb') as csv_file:
-    reader = csv.reader(csv_file)
-    mydict = dict(reader)
 
-total_teams_tmp=[ast.literal_eval(mydict[e]) for e in mydict]
-total_teams = list(set([item for sublist in total_teams_tmp for item in sublist]))
+output_dir = os.path.abspath(args.output_dir)
+total_teams = readDicValuesFromCsv(os.path.join(os.path.dirname(os.path.abspath(__file__)),args.input_dir,'loan_team.csv'))
 
 team_member_csv = os.path.join(output_dir,'team_member.csv')
 
@@ -49,9 +38,17 @@ with open(team_member_csv, 'w') as outfile:
 
 
 for _team_id_index in range(len(total_teams)):
-    total_pages = json.loads(forwardRequest(teammember_page(total_teams[_team_id_index],1),'crawling the number of total pages for teammembers of team '+str(_team_id_index+1)+' out of '+str(len(total_teams))+' teams').read())['paging']['pages']
+    try:
+        total_pages = json.loads(forwardRequest(teammember_page(total_teams[_team_id_index],1),'crawling the number of total pages for teammembers of team '+str(_team_id_index+1)+' out of '+str(len(total_teams))+' teams').read())['paging']['pages']
+    except Exception as e:
+        print str(e)
+        continue
     for i in range(1, total_pages+1):
-        response = forwardRequest(teammember_page(total_teams[_team_id_index],i),'crawling the team: page '+str(i)+', '+' out of '+str(total_pages)+' pages for team '+str(_team_id_index))
+        try:
+            response = forwardRequest(teammember_page(total_teams[_team_id_index],i),'crawling the team: page '+str(i)+', '+' out of '+str(total_pages)+' pages for team '+str(_team_id_index))
+        except Exception as e:
+            print str(e)
+            continue
         this_page = json.loads(response.read())
         page_size = len(this_page['lenders'])
         for j in range(page_size):
