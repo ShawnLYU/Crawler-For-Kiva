@@ -22,6 +22,7 @@ args = parser.parse_args()
 output_dir = args.output_dir
 prev_id_dir = args.input_dir
 loan_additional_info = os.path.join(output_dir,'loan_additional_info.csv')
+loan_additional_info_view = os.path.join(output_dir,'loan_additional_info_view.csv')
 
 
 if not os.path.exists(output_dir):
@@ -53,6 +54,46 @@ with open(loan_additional_info, 'a+') as outfile:
             print str(e)
             writer.writerow([loan_id,'N/A','N/A'])
             continue
+
+
+
+with open(loan_additional_info, 'rb') as f:
+    reader = csv.reader(f)
+    your_list = list(reader)
+
+import json
+# your_list is a list of informtion, the second of which contains a json that could be converted to a dictionary
+keys = json.loads(your_list[0][2]).keys()
+with open(loan_additional_info_view, 'a+') as outfile:
+    writer = csv.writer(outfile)
+    header = ['id','status']+keys
+    writer.writerow(header)
+    for row in your_list:
+        _this_row = [your_list[0][0],your_list[0][1]]
+        _this_dic = json.loads(row[2])
+        for k in keys:
+            try:
+                _this_row.append(_this_dic[k])
+            except Exception as s:
+                _this_row.append('')
+        writer.writerow(_this_row)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

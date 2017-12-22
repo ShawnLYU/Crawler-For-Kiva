@@ -47,7 +47,7 @@ class Team:
     def write(self, file_path, feature):
         with open(file_path, 'a+') as outfile:
             writer = csv.writer(outfile)
-            writer.writerow([unicode(self.team_info[f]).encode("utf-8").replace("\n", "\\n") for f in feature])
+            writer.writerow([unicode(self.team_info[f]).encode("utf-8").replace("\n", "").replace("\r", "") for f in feature])
  
 
 

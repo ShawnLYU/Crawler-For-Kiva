@@ -1,9 +1,0 @@
-To retrive additional info:
-
-import csv
-with open('loan_additional_info.csv', 'rb') as f:
-    reader = csv.reader(f)
-    your_list = list(reader)
-
-import json
-d = json.loads(your_list[0][2])

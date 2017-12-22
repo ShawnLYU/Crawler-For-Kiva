@@ -150,6 +150,9 @@ def lender_each(lenderid):
 def team_each(teamid):
     teamid = str(teamid)
     return "https://api.kivaws.org/v1/teams/%s.json" % (teamid) 
+    
+def team_each_shortname(teamname):
+    return "https://api.kivaws.org/v1/teams/using_shortname/%s.json" % (teamname) 
 
 def teammember_page(teamid,page):
     teamid = str(teamid)
