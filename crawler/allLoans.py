@@ -53,7 +53,7 @@ with open(loan_csv, 'w') as outfile:
 
 with open(loan_id_csv, 'a+') as outfile:
     writer = csv.writer(outfile)
-    for n in range(1):
+    for n in range(14000):
         pageid=str(n*100)
         site= 'https://api.kivaws.org/v2/loans?limit=10&facets=true&type=lite&sortBy=newest&offset='+pageid+'&q=j:{"status":"all"}'
         response = forwardRequest(site,'crawling the page: '+str(pageid))
