@@ -115,7 +115,7 @@ def forwardRequest(link,logInfo=''):
 def forwardRequestFromIps(url,logInfo=''):
     proxy_host = "proxy.crawlera.com"
     proxy_port = "8010"
-    proxy_auth = "8d6572719f4346188560151e3f59fed8:" # Make sure to include ':' at the end
+    proxy_auth = "****************************:" # Make sure to include ':' at the end
     proxies = {"https": "https://{}@{}:{}/".format(proxy_auth, proxy_host, proxy_port),
           "http": "http://{}@{}:{}/".format(proxy_auth, proxy_host, proxy_port)}
     log(logInfo)
