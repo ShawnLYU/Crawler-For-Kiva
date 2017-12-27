@@ -7,6 +7,7 @@ import re
 
 import csv 
 import argparse
+from common import forwardRequestFromIps
 from common import forwardRequest
 from common import readDicValuesFromCsv
 from common import team_features
@@ -20,7 +21,7 @@ args = parser.parse_args()
 
 
 output_dir = args.output_dir
-output_file = os.path.join(output_dir,'all_teams.csv')
+output_file = os.path.join(output_dir,'team_names.csv')
 team_all_csv = os.path.join(output_dir,'team_all.csv')
 
 
@@ -32,15 +33,16 @@ if not os.path.exists(output_dir):
 with open(output_file, 'a+') as outfile:
     writer = csv.writer(outfile)
     teamnames = []
-    for pageid in range(10000):
+    for pageid in range(3600):
         site= "https://www.kiva.org/teams?pageID="+str(pageid)
-        page = forwardRequest(site,'crawling the page: '+str(pageid))
+        page = forwardRequestFromIps(site,'crawling the page: '+str(pageid))
         soup = BeautifulSoup(page)
         if len(soup.find_all("a", { "class":"img img-s135 thumb " },href=True)) == 0:
             break
         for link in soup.find_all("a", { "class":"img img-s135 thumb " },href=True):
-            teamnames.append(link['href'].split('/')[-1])
-    writer.writerow(teamnames)
+            _id=link['href'].split('/')[-1]
+            teamnames.append(_id)
+            outfile.writelines(_id+'\n')
 
 
 

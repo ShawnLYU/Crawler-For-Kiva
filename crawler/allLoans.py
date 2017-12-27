@@ -8,6 +8,7 @@ import argparse
 from common import loan_features
 from common import log
 from common import forwardRequest
+from common import forwardRequestFromIps
 from common import loan_page
 from common import loan_each
 from common import loan_lender_page
@@ -53,11 +54,11 @@ with open(loan_csv, 'w') as outfile:
 
 with open(loan_id_csv, 'a+') as outfile:
     writer = csv.writer(outfile)
-    for n in range(14000):
+    for n in range(14100):
         pageid=str(n*100)
         site= 'https://api.kivaws.org/v2/loans?limit=10&facets=true&type=lite&sortBy=newest&offset='+pageid+'&q=j:{"status":"all"}'
-        response = forwardRequest(site,'crawling the page: '+str(pageid))
-        this_page = json.loads(response.read())
+        response = forwardRequestFromIps(site,'crawling the page: '+str(pageid))
+        this_page = json.loads(response)
         for record in this_page['entities']:
             loan_ids.append(record['properties']['id'])
             writer.writerow([record['properties']['id']])
