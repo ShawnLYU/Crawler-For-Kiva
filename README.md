@@ -1,6 +1,6 @@
 ## This package is implemented to crawl loans related data from **Kiva**
 ### About Kiva
-Kiva is an international nonprofit, founded in 2005 and based in San Francisco, with a mission to connect people through lending to alleviate poverty. We celebrate and support people looking to create a better future for themselves, their families and their communities.
+>Kiva is an international nonprofit, founded in 2005 and based in San Francisco, with a mission to connect people through lending to alleviate poverty. We celebrate and support people looking to create a better future for themselves, their families and their communities.
 
 Description about Kiva could be found via https://www.kiva.org
 
